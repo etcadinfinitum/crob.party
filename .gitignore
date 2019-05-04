@@ -1,3 +1,7 @@
 __pycache__/
 # don't spill the beans!
 secret.py
+# exclude database from commits
+*.db
+# ignore vim temp files
+.*.sw?

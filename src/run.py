@@ -74,10 +74,7 @@ def vote():
         crobdidates = []
         for row in cur.fetchall():
             print(row)
-            prez = row[1]
-            vprz = row[2]
-            idnum = row[0]
-            crobdidates.append(Vote(prez, vprz, idnum))
+            crobdidates.append(Vote(row[0], row[1], row[2], row[3], row[4], row[5]))
         
         return render_template('vote.html', crobdidates = crobdidates)
     return render_template('home.html')
@@ -87,14 +84,44 @@ def count_vote():
     if 'candidate' in request.form and request.form['candidate'] != "-1":
         print('standard candidates selected')
         print(str(request.form['candidate']))
+        with app.app_context():
+            db = get_db()
+            cur = db.cursor()
+            c = int(request.form['candidate'])
+            cur.execute('SELECT * FROM crobdidates WHERE id = ?', (c,))
+            result = cur.fetchone()
+            print(str(result))
+            newvotes = int(result[5]) + 1
+            cur.execute('UPDATE crobdidates SET votes = ? WHERE id = ?', (newvotes, int(request.form['candidate'])))
+            db.commit()
+            
     elif 'writein' in request.form and request.form['writein']:
         print('writein candidate selected!')
         print(request.form['writein'])
+        with app.app_context():
+            db = get_db()
+            cur = db.cursor()
+            # TODO: look for write-in candidate first based on name
+            cur.execute('SELECT * FROM crobdidates WHERE prez = ?', request.form['writein'])
+            result = cur.fetchone()
+            if not result:
+                cur.execute('INSERT INTO crobdidates (prez, vprz, slogan, writein, votes) VALUES (?, ?, ?, ?, ?)', (request.form['writein'], "", "", True, 1))
+            else:
+                cur.execute('UPDATE crobdidates SET votes = ? WHERE id = ?', (int(result[5]) + 1, int(result[0])))
+            db.commit()
     # TODO: get form data (request.form)
     # TODO: commit new data to db
     # TODO: call routine to generate graph, return filename
-    # return render_template('results.html', graph_file="")
-    return render_template('vote.html')
+    data = []
+    with app.app_context():
+        db = get_db()
+        cur = db.cursor()
+        cur.execute('SELECT * FROM crobdidates ORDER BY votes DESC')
+        for row in cur.fetchall():
+            data.append(Vote(row[0], row[1], row[2], row[3], row[4], row[5]))
+    print(str(data))
+    return render_template('results.html', graph_file="", data = data)
+    # return render_template('vote.html')
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0')

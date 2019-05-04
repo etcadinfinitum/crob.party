@@ -102,7 +102,7 @@ def count_vote():
             db = get_db()
             cur = db.cursor()
             # TODO: look for write-in candidate first based on name
-            cur.execute('SELECT * FROM crobdidates WHERE prez = ?', request.form['writein'])
+            cur.execute('SELECT * FROM crobdidates WHERE prez = ?', (request.form['writein'],))
             result = cur.fetchone()
             if not result:
                 cur.execute('INSERT INTO crobdidates (prez, vprz, slogan, writein, votes) VALUES (?, ?, ?, ?, ?)', (request.form['writein'], "", "", True, 1))

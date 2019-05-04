@@ -3,7 +3,12 @@
 {% block content %}
 <!-- TODO: radio buttons~ -->
 <form method="POST" action="/results">
-
+{% for c in crobdidates %}
+    <input type="radio" name="candidate" value="{{ c.idnum }}">{{ c.prez }} / {{ c.vprz }}</input>
+{% endfor %}
+    <input type="radio" name="candidate" value="-1">
+        <input id="writein" name="writein" placeholder="Write-in candidate"></input>
+    </input>
 <button type="submit">!!! Vote Now !!!</button>
 </form>
 {% endblock %}

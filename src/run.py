@@ -6,7 +6,7 @@ import time
 import secret
 from crob import profile as crob_profile
 from crobnish import profile as crobnish_profile
-
+from vote import Vote
 
 app = Flask(__name__)
 
@@ -67,14 +67,34 @@ def landing():
 
 @app.route('/vote', methods=['POST'])
 def vote():
-    return render_template('vote.html')
+    with app.app_context():
+        db = get_db()
+        cur = db.cursor()
+        cur.execute('SELECT * FROM crobdidates WHERE writein = FALSE')
+        crobdidates = []
+        for row in cur.fetchall():
+            print(row)
+            prez = row[1]
+            vprz = row[2]
+            idnum = row[0]
+            crobdidates.append(Vote(prez, vprz, idnum))
+        
+        return render_template('vote.html', crobdidates = crobdidates)
+    return render_template('home.html')
 
 @app.route('/results', methods=['GET', 'POST'])
 def count_vote():
+    if 'candidate' in request.form and request.form['candidate'] != "-1":
+        print('standard candidates selected')
+        print(str(request.form['candidate']))
+    elif 'writein' in request.form and request.form['writein']:
+        print('writein candidate selected!')
+        print(request.form['writein'])
     # TODO: get form data (request.form)
     # TODO: commit new data to db
     # TODO: call routine to generate graph, return filename
-    return render_template('results.html', graph_file="")
+    # return render_template('results.html', graph_file="")
+    return render_template('vote.html')
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0')

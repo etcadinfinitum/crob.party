@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <h1>Welcome to CROB.PARTY.</h1>
+    <p>
+    It's not actually a party. It's a 
+    HOTLY CONTESTED race for president, 
+    and YOU the PEOPLE get to decide who 
+    will be the next El Presidente of 
+    CROBDOM.
+    </p>
+    <form method="POST" action="/vote">
+        <div>
+        <button type="submit">VOTE NOW!</button>
+        </div>
+    </form>
+    <form method="POST" action="/results">
+        <div>
+        <button type="submit">See Results</button>
+        </div>
+    </form>
+{% endblock %}

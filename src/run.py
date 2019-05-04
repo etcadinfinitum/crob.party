@@ -69,7 +69,7 @@ def landing():
 def vote():
     return render_template('vote.html')
 
-@app.route('/count_vote', methods=['GET', 'POST'])
+@app.route('/results', methods=['GET', 'POST'])
 def count_vote():
     # TODO: get form data (request.form)
     # TODO: commit new data to db

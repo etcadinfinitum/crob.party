@@ -105,7 +105,6 @@ def count_vote():
         with app.app_context():
             db = get_db()
             cur = db.cursor()
-            # TODO: look for write-in candidate first based on name
             cur.execute('SELECT * FROM crobdidates WHERE prez = ?', (request.form['writein'],))
             result = cur.fetchone()
             if not result:

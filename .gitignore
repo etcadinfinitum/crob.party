@@ -5,3 +5,5 @@ secret.py
 *.db
 # ignore vim temp files
 .*.sw?
+
+static/images/graphs/*.*.png

@@ -2,13 +2,17 @@
 
 {% block content %}
 <!-- TODO: radio buttons~ -->
-<form method="POST" action="/results">
+<script src="static/form.js"></script>
+<h1>!!! Vote Now !!!</h1>
+<form method="POST" id="voting-form" action="/results">
 {% for c in crobdidates %}
-    <input type="radio" name="candidate" value="{{ c.idnum }}">{{ c.prez }} / {{ c.vprz }}</input>
+    <input type="radio" name="candidate" value="{{ c.idnum }}" onclick="disable()">{{ c.prez }} / {{ c.vprz }}</input>
+    <br>
 {% endfor %}
-    <input type="radio" name="candidate" value="-1">
-        <input id="writein" name="writein" placeholder="Write-in candidate"></input>
+    <input type="radio" name="candidate" value="-1" onclick="enable()">
+        <input id="writein" name="writein" placeholder="Write-in candidate" disabled></input>
     </input>
+    <br>
 <button type="submit">!!! Vote Now !!!</button>
 </form>
 {% endblock %}

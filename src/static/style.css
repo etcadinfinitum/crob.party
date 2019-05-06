@@ -1,3 +1,15 @@
 #banner img {
     max-width: 100%;
 }
+
+#graph {
+    max-width: 100%;
+}
+
+#voting-form input[type="radio"] {
+    display: inline-block;
+}
+
+#voting-form button {
+    display: block;
+}

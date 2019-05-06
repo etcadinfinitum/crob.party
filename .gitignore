@@ -6,4 +6,4 @@ secret.py
 # ignore vim temp files
 .*.sw?
 
-static/images/graphs/*.*.png
+generated*.*.png

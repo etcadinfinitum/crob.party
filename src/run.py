@@ -1,3 +1,7 @@
+import matplotlib as mpl
+mpl.use('Agg')
+import numpy as np
+from matplotlib import pyplot as pyp
 from flask import Flask, send_from_directory, session, url_for, request, flash, redirect, render_template, g
 import os
 import sqlite3
@@ -109,9 +113,6 @@ def count_vote():
             else:
                 cur.execute('UPDATE crobdidates SET votes = ? WHERE id = ?', (int(result[5]) + 1, int(result[0])))
             db.commit()
-    # TODO: get form data (request.form)
-    # TODO: commit new data to db
-    # TODO: call routine to generate graph, return filename
     data = []
     with app.app_context():
         db = get_db()
@@ -119,9 +120,17 @@ def count_vote():
         cur.execute('SELECT * FROM crobdidates ORDER BY votes DESC')
         for row in cur.fetchall():
             data.append(Vote(row[0], row[1], row[2], row[3], row[4], row[5]))
-    print(str(data))
-    return render_template('results.html', graph_file="", data = data)
-    # return render_template('vote.html')
+    # print(str(data))
+    graph_file = render_graph(data)
+    return render_template('results.html', graph_file=graph_file, data = data)
+
+def render_graph(data):
+    fig = pyp.figure()
+    pyp.pie([int(v.votes) for v in data], labels=[v.prez for v in data])
+    pyp.axis('equal')
+    filename = 'static/images/graphs/generated' + str(time.time()) + '.png'
+    pyp.savefig(filename, bbox_inches='tight')
+    return filename
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0')
